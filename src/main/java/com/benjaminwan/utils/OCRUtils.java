@@ -22,16 +22,14 @@ public class OCRUtils {
         int maxSideLen = 1024;
         float boxScoreThresh = 0.6f;
         float boxThresh = 0.3f;
-        float unClipRatio = 2f;
-        boolean doAngle = true;
-        boolean mostAngle = true;
+        float unClipRatio = 2.2f;
+        boolean doAngle = false;
+        boolean mostAngle = false;
         int gpuIndex = 0;
 
         OcrEngine ocrEngine = new OcrEngine();
-        System.out.println("success01");
         ocrEngine.setNumThread(numThread);
 
-        System.out.println("success02");
         ocrEngine.initLogger(
                 false,
                 false,

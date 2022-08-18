@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class UploadUtils {
     //定义图片上传目标路径
-    public static final String FILE_SPEACE = "/usr/lib/images/";
+    public static final String FILE_SPEACE = "/demo/images/";
     @SneakyThrows
     //上传文件，返回上传之后的地址
     public static String upload(MultipartFile file){
