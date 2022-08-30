@@ -13,7 +13,7 @@ import java.util.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/ocr")
+@RequestMapping("/ocrold")
 public class OCRController {
     @PostMapping("/image")
     public Map<String,String> ocrImage(@RequestParam MultipartFile files[]) throws Exception {
@@ -38,6 +38,12 @@ public class OCRController {
         return map;
     }
 
+    /**
+     *
+     * @param files
+     * @throws Exception
+     * 测试文件上传模块，不一定用得到
+     */
     @PostMapping("/image01")
     public void upload(@RequestParam MultipartFile files[])throws Exception{
         for (MultipartFile file : files) {
