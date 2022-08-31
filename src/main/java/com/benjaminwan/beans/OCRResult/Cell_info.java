@@ -3,10 +3,12 @@ package com.benjaminwan.beans.OCRResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Cell_info {
     Integer table_cell_id;//0-1-2....
     Integer xsc = 0;

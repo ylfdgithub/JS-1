@@ -1,4 +1,4 @@
-package com.benjaminwan.beans.TableResult;
+package com.benjaminwan.beans.HHResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import org.opencv.core.Mat;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SubImage{
-    Mat mat;
-    int[] position;
+public class Page {
+    Integer pageID;
+    Mat image;
 }

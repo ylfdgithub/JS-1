@@ -17,7 +17,10 @@ import ai.djl.training.util.ProgressBar;
 import ai.djl.translate.TranslateException;
 import com.benjaminwan.translator.PpWordDetectionTranslator;
 import com.benjaminwan.translator.PpWordRecognitionTranslator;
+import com.benjaminwan.utils.ImageUtils;
+import org.opencv.core.Mat;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -94,6 +97,26 @@ public class PytorchOCRUtil {
         /**
          * 获取分割出来的文字区域列表
          */
+        List<DetectedObjects.DetectedObject> boxes = detectedObj.items();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < boxes.size(); i++) {
+            Image subImage = getSubImage(img, boxes.get(i).getBoundingBox());
+            subImage.getWrappedImage();
+            String predict = recognizer.predict(subImage);
+            sb.append(predict);
+        }
+        return sb.toString();
+    }
+
+    public static String ocr(Mat mat) throws IOException, TranslateException {
+        Predictor<Image, DetectedObjects> detector = detectionModel.newPredictor();
+        Predictor<Image, String> recognizer = recognitionModel.newPredictor();
+        BufferedImage bufferedImage = ImageUtils.matToBImage(mat);
+        Image img = ImageFactory.getInstance().fromImage(bufferedImage);
+        DetectedObjects detectedObj = detector.predict(img);
+        Image newImage = img.duplicate();
+        newImage.drawBoundingBoxes(detectedObj);
+        newImage.getWrappedImage();
         List<DetectedObjects.DetectedObject> boxes = detectedObj.items();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < boxes.size(); i++) {

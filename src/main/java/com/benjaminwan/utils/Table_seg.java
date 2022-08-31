@@ -1,5 +1,7 @@
 package com.benjaminwan.utils;
 
+import com.benjaminwan.beans.TableResult.SubImage;
+import com.benjaminwan.beans.TableResult.TableResult;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
@@ -229,7 +231,7 @@ public class Table_seg {
         return bounds;
     }
 
-    public static boolean draw_rectangle(Mat image_x,List<List<int[]>> bounds,String dirname,String f_name,String result_path) {
+    public static boolean title_belong(Mat image_x,List<List<int[]>> bounds,String dirname,String f_name,String result_path) {
         boolean title_exist = false;
         int count = 1;
         int coordinate_count = bounds.size();
@@ -267,15 +269,47 @@ public class Table_seg {
 
 //        imwrite(result_path+"\\1.jpg",title);
 
-        for (;i<bounds.size()-1;i++){
+//        for (;i<bounds.size()-1;i++){
+//            //System.out.println(bounds.get(i).size());
+//            for (int j=0;j<bounds.get(i).size();j++){
+//                int x = bounds.get(i).get(j)[0];
+//                int y = bounds.get(i).get(j)[1];
+//                int w = bounds.get(i).get(j)[2];
+//                int h = bounds.get(i).get(j)[3];
+//                //rectangle(image_x, new Point(x, y), new Point(x + w, y + h), new Scalar(255, 0, 0), 2);
+//                //imwrite("D:\\IDEA\\Project\\table_split\\result\\1.jpg",image_x);
+//                Rect rect = new Rect(x,y,w,h);
+//                Mat ROI = new Mat(image_x,rect);
+//                Mat ROI1 = ROI.clone();
+//                Mat final_image = new Mat();
+//                int top = (int) (0.3*ROI1.rows());
+//                int bottom = (int) (0.3*ROI1.rows());
+//                int left = (int) (0.3*ROI1.cols());
+//                int right = (int) (0.3*ROI1.cols());
+//                copyMakeBorder(ROI1, final_image, top, bottom, left, right, BORDER_CONSTANT,new Scalar(255));
+//                if(count>=0&&count<10){
+//                    imwrite(result_path+"/"+f_name+"/"+f_name+"-part-"+String.valueOf(count)+".jpg",final_image);
+//                    count+=1;
+//                }
+//                else {
+//                    imwrite(result_path+"/"+f_name+"/"+f_name+"-part-"+String.valueOf(count)+".jpg",final_image);
+//                    count+=1;
+//                }
+//            }
+//        }
+
+        return title_exist;
+    }
+
+    public static List<SubImage> get_SubImage(Mat image_x,List<List<int[]>> bounds,String f_name) {
+        List<SubImage> subImages = new ArrayList<>();
+        for (int i=0;i<bounds.size();i++){
             //System.out.println(bounds.get(i).size());
             for (int j=0;j<bounds.get(i).size();j++){
                 int x = bounds.get(i).get(j)[0];
                 int y = bounds.get(i).get(j)[1];
                 int w = bounds.get(i).get(j)[2];
                 int h = bounds.get(i).get(j)[3];
-                //rectangle(image_x, new Point(x, y), new Point(x + w, y + h), new Scalar(255, 0, 0), 2);
-                //imwrite("D:\\IDEA\\Project\\table_split\\result\\1.jpg",image_x);
                 Rect rect = new Rect(x,y,w,h);
                 Mat ROI = new Mat(image_x,rect);
                 Mat ROI1 = ROI.clone();
@@ -285,22 +319,17 @@ public class Table_seg {
                 int left = (int) (0.3*ROI1.cols());
                 int right = (int) (0.3*ROI1.cols());
                 copyMakeBorder(ROI1, final_image, top, bottom, left, right, BORDER_CONSTANT,new Scalar(255));
-                if(count>=0&&count<10){
-                    imwrite(result_path+"/"+f_name+"/"+f_name+"-part-"+String.valueOf(count)+".jpg",final_image);
-                    count+=1;
-                }
-                else {
-                    imwrite(result_path+"/"+f_name+"/"+f_name+"-part-"+String.valueOf(count)+".jpg",final_image);
-                    count+=1;
-                }
+                int[] position=new int[]{x,y,x+w,y+h};
+                SubImage subImage = new SubImage(final_image,position);
+                subImages.add(subImage);
             }
         }
 
-        return title_exist;
+        return subImages;
     }
 
 
-    public static Map<String, List<int[]>> tables() throws Exception {
+    public static List<TableResult> tables(List<Mat> mats,List<String> fnames) throws Exception {
 
         String img_path = "/demo/images";
         String result_path = "/demo/split_result";
@@ -310,28 +339,28 @@ public class Table_seg {
         String title_belong = null;
         ArrayList<String> fname = new ArrayList<String>();
         Map<String, List<int[]>> pairs_map = new HashMap<String, List<int[]>>();
+        List<TableResult> tableResults = new ArrayList<>();
 
-
-        for(File f:fs) {
-            String f_name = f.getName();
-            fname.add(f_name);
-        }
-        Collections.sort(fname);
-        for(int i=0;i<fname.size();i++){
-            List<int[]> pairs = new ArrayList<>();
-            String f_name = fname.get(i);
-            if(fname.size()!=0)
-            {
-                dirname = result_path + "/" + f_name;
-                File path = new File(dirname);
-                if ( !path.exists()){
-                    path.mkdir();
-                    System.out.println("创建文件夹路径为："+ path);
-                }
-            }
+//        for(File f:fs) {//图片名字重新排序，防止在linux下乱序
+//            String f_name = f.getName();
+//            fname.add(f_name);
+//        }
+//        Collections.sort(fname);
+        for(int i=0;i<mats.size();i++){
+            //List<int[]> pairs = new ArrayList<>();
+            String f_name = fnames.get(i);
+//            if(fnames.size()!=0)
+//            {
+//                dirname = result_path + "/" + f_name;
+//                File path = new File(dirname);
+//                if ( !path.exists()){
+//                    path.mkdir();
+//                    System.out.println("创建文件夹路径为："+ path);
+//                }
+//            }
             System.loadLibrary("opencv_java430");
-            String image_path = img_path + "/" + f_name;
-            Mat image = imread(image_path);
+            //String image_path = img_path + "/" + f_name;
+            Mat image = mats.get(i);
 
             if (image.empty()) {
                 throw new Exception("image is empty");
@@ -357,7 +386,7 @@ public class Table_seg {
                 sorted_bounds = get_resorted_bounds(boundings);
                 bounds = add_head_tail_bound(sorted_bounds, width = width, height = height);
             }
-            boolean title_exist = draw_rectangle(image_rotated.clone(), bounds, dirname, f_name, result_path);
+            boolean title_exist = title_belong(image_rotated, bounds, dirname, f_name, result_path);//散件挂接（判断图片有没有表头）
             if(title_exist){
                 title_belong = f_name;
                 System.out.println(f_name+"  belong to  "+title_belong);
@@ -366,43 +395,44 @@ public class Table_seg {
                 System.out.println(f_name+"  belong to  "+title_belong);
             }
 
+            List<SubImage> subImages = get_SubImage(image_rotated,bounds,f_name);//返回切割完的小图以及坐标
+            TableResult tableResult = new TableResult(f_name,subImages);
+            tableResults.add(tableResult);
 
-            int count = 0;
-            int flag =1;
-            int key = 0;
-            int value = 0;
-            int k=1;
-            if(title_exist){
-                pairs.add(new int[]{0,-1});
-            }
-            for (; k < bounds.size()-1; k++) {       //默认不算第一张，因为第一张是表头
-                for (int j = 0; j < ((List) bounds.get(k)).size(); j++) {
-                    count++;
-                    int h_ = ((int[]) ((List) bounds.get(k)).get(j))[3];
-                    if (flag % 2 == 1) {
-                        if (j == ((List) bounds.get(k)).size() - 1 || h_ > ((int[]) ((List) bounds.get(k)).get(j + 1))[3]+5 ||  ((List) bounds.get(k)).size() == 1) {      //代表配对失败
-                            pairs.add(new int[]{count,-1});
-                            //System.out.println("1"+"   "+pairs.get(pairs.size()-1)[0]);
-                        } else {
-                            key = count;
-                            flag++;
-                            //System.out.println("2");
-                        }
-                    }
-                    else if (flag % 2 == 0) {
-                        value = count;
-                        pairs.add(new int[]{key,value});
-                        flag++;
-                        //System.out.println("3"+"   "+pairs.get(pairs.size()-1)[0]);
-                    }
-                }
-
-            }
-//            for (int i1=0;i1<pairs.size();i1++){
-//                System.out.println(pairs.get(i1)[0]+"   "+pairs.get(i1)[1]);
+//            int count = 0;
+//            int flag =1;
+//            int key = 0;
+//            int value = 0;
+//            int k=1;
+//            if(title_exist){
+//                pairs.add(new int[]{0,-1});
 //            }
-            pairs_map.put(f_name,pairs);
+//            for (; k < bounds.size()-1; k++) {       //默认不算第一张，因为第一张是表头
+//                for (int j = 0; j < ((List) bounds.get(k)).size(); j++) {
+//                    count++;
+//                    int h_ = ((int[]) ((List) bounds.get(k)).get(j))[3];
+//                    if (flag % 2 == 1) {
+//                        if (j == ((List) bounds.get(k)).size() - 1 || h_ > ((int[]) ((List) bounds.get(k)).get(j + 1))[3]+5 ||  ((List) bounds.get(k)).size() == 1) {      //代表配对失败
+//                            pairs.add(new int[]{count,-1});
+//                            //System.out.println("1"+"   "+pairs.get(pairs.size()-1)[0]);
+//                        } else {
+//                            key = count;
+//                            flag++;
+//                            //System.out.println("2");
+//                        }
+//                    }
+//                    else if (flag % 2 == 0) {
+//                        value = count;
+//                        pairs.add(new int[]{key,value});
+//                        flag++;
+//                        //System.out.println("3"+"   "+pairs.get(pairs.size()-1)[0]);
+//                    }
+//                }
+//
+//            }
+//
+//            pairs_map.put(f_name,pairs);
         }
-        return pairs_map;
+        return tableResults;
     }
 }

@@ -3,7 +3,7 @@ package com.benjaminwan;
 import com.alibaba.fastjson.JSONArray;
 import com.benjaminwan.beans.RestBean;
 import com.benjaminwan.pytorchOCR.PytorchOCRUtil;
-import com.benjaminwan.utils.OCRUtils;
+
 import com.benjaminwan.utils.Table_seg;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

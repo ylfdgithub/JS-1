@@ -112,7 +112,7 @@ public class ImageUtils {
     /**
      * static Mat 转 BufferedImage
      */
-    public BufferedImage matToBImage(Mat mat) throws IOException {
+    public static BufferedImage matToBImage(Mat mat) throws IOException {
         BufferedImage bi;//Image图片
         MatOfByte b = new MatOfByte();//保存的二进制数据
         Imgcodecs.imencode(".png", mat, b);//Mat转换成二进制数据。.png表示图片格式，格式不重要，基本不会对程序有任何影响。

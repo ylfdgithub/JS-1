@@ -1,16 +1,17 @@
-package com.benjaminwan.beans.TableResult;
+package com.benjaminwan.beans.HHResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.opencv.core.Mat;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class SubImage{
-    Mat mat;
-    int[] position;
+public class HHResult {
+    String pageName;
+    List<Page> pages;
 }
