@@ -1,6 +1,7 @@
 package com.benjaminwan;
 
 import com.alibaba.fastjson.JSONArray;
+import com.benjaminwan.beans.OCRResult.Cell_info;
 import com.benjaminwan.beans.RestBean;
 import com.benjaminwan.pytorchOCR.PytorchOCRUtil;
 
@@ -16,7 +17,6 @@ public class KjTestApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(KjTestApplication.class, args);
-
 
 //        Table_seg.tables();
 

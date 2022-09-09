@@ -32,6 +32,7 @@ public class PytorchOCRUtil {
     /**
      * DET模型构建
      */
+
     static Criteria<Image, DetectedObjects> criteria_det = Criteria.builder()
             .setTypes(Image.class, DetectedObjects.class)
             .optModelPath(Paths.get(DET_PATH))
@@ -72,14 +73,15 @@ public class PytorchOCRUtil {
             throw new RuntimeException(e);
         }
     }
-
+    static Predictor<Image, DetectedObjects> detector = detectionModel.newPredictor();
+    static Predictor<Image, String> recognizer = recognitionModel.newPredictor();
 
     public static String ocr(String path) throws IOException, TranslateException {
         /**
          * 两个Predictor生成
          */
-        Predictor<Image, DetectedObjects> detector = detectionModel.newPredictor();
-        Predictor<Image, String> recognizer = recognitionModel.newPredictor();
+//        Predictor<Image, DetectedObjects> detector = detectionModel.newPredictor();
+//        Predictor<Image, String> recognizer = recognitionModel.newPredictor();
 
         /**
          * 加载图片
@@ -109,8 +111,6 @@ public class PytorchOCRUtil {
     }
 
     public static String ocr(Mat mat) throws IOException, TranslateException {
-        Predictor<Image, DetectedObjects> detector = detectionModel.newPredictor();
-        Predictor<Image, String> recognizer = recognitionModel.newPredictor();
         BufferedImage bufferedImage = ImageUtils.matToBImage(mat);
         Image img = ImageFactory.getInstance().fromImage(bufferedImage);
         DetectedObjects detectedObj = detector.predict(img);

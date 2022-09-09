@@ -17,13 +17,15 @@ public class Table_seg {
 
     public static Mat get_rotated_image(Mat image,double h,double w){
 
-        cvtColor(image, image, COLOR_RGB2GRAY);
+        cvtColor(image, image, COLOR_RGB2GRAY);/////////////////////////
 
         Mat binary=new Mat();
         adaptiveThreshold(image,binary,255,ADAPTIVE_THRESH_GAUSSIAN_C,THRESH_BINARY,15,-10);
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Mat hierarchy = new Mat();
         findContours(binary,contours,hierarchy,RETR_EXTERNAL,CHAIN_APPROX_NONE);
+        if(contours.size()==0)
+            return image;
         double area = 0;
         int index = 0;
         for (int i=0;i<contours.size();i++){
@@ -43,6 +45,8 @@ public class Table_seg {
         else if (angle < -45){
             angle = 90. + angle;
         }
+        if(Math.abs(angle)<1) //////
+            return image;
         Point center = new Point(h/2,w/2);
         Mat m = getRotationMatrix2D(center, angle, 1.0);
         Mat rotated_image = new Mat();
@@ -301,9 +305,18 @@ public class Table_seg {
         return title_exist;
     }
 
-    public static List<SubImage> get_SubImage(Mat image_x,List<List<int[]>> bounds,String f_name) {
+    public static List<SubImage> get_SubImage(Mat image_x, List<List<int[]>> bounds, String f_name) {
         List<SubImage> subImages = new ArrayList<>();
-        for (int i=0;i<bounds.size();i++){
+        int coordinate_count = bounds.size();
+        int left_point_y = bounds.get(1).get(0)[1]-8;
+        int title_height = left_point_y;
+        Rect R = new Rect(0, 0, image_x.width(), title_height);
+        Mat title = image_x.submat(R);
+        int[] position=new int[]{0,0,image_x.width(),title_height};
+        SubImage subImage = new SubImage(title,position);
+        subImages.add(subImage);
+
+        for (int i=1;i<bounds.size()-1;i++){
             //System.out.println(bounds.get(i).size());
             for (int j=0;j<bounds.get(i).size();j++){
                 int x = bounds.get(i).get(j)[0];
@@ -319,17 +332,16 @@ public class Table_seg {
                 int left = (int) (0.3*ROI1.cols());
                 int right = (int) (0.3*ROI1.cols());
                 copyMakeBorder(ROI1, final_image, top, bottom, left, right, BORDER_CONSTANT,new Scalar(255));
-                int[] position=new int[]{x,y,x+w,y+h};
-                SubImage subImage = new SubImage(final_image,position);
+                position=new int[]{x,y,x+w,y+h};
+                subImage = new SubImage(final_image,position);
                 subImages.add(subImage);
             }
         }
-
         return subImages;
     }
 
 
-    public static List<TableResult> tables(List<Mat> mats,List<String> fnames) throws Exception {
+    public static List<TableResult> tables(List<Mat> mats, List<String> fnames) throws Exception {
 
         String img_path = "/demo/images";
         String result_path = "/demo/split_result";
