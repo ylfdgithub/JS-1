@@ -18,10 +18,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- 设置kotlin版本 -->
-        <kotlin.version>1.4.21</kotlin.version>
-        <!-- 启用kotlin增量编译 -->
-        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+<!--        <kotlin.version>1.4.21</kotlin.version>-->
+<!--        &lt;!&ndash; 启用kotlin增量编译 &ndash;&gt;-->
+<!--        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>-->
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -34,16 +35,16 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains.kotlin</groupId>-->
+<!--            <artifactId>kotlin-reflect</artifactId>-->
+<!--            <version>${kotlin.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jetbrains.kotlin</groupId>-->
+<!--            <artifactId>kotlin-stdlib-jdk8</artifactId>-->
+<!--            <version>${kotlin.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
@@ -70,11 +71,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.opencv</groupId>
-            <artifactId>open-cv</artifactId>
-            <version>4.4.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.opencv</groupId>-->
+<!--            <artifactId>open-cv</artifactId>-->
+<!--            <version>4.4.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>ai.djl.pytorch</groupId>
             <artifactId>pytorch-engine</artifactId>
@@ -116,10 +117,17 @@
             <groupId>ai.djl.pytorch</groupId>
             <artifactId>pytorch-model-zoo</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ai.djl.pytorch</groupId>-->
+<!--            <artifactId>pytorch-native-cpu-precxx11</artifactId>-->
+<!--            <classifier>linux-aarch64</classifier>-->
+<!--            <scope>runtime</scope>-->
+<!--            <version>1.11.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>ai.djl.pytorch</groupId>
-            <artifactId>pytorch-native-cpu-precxx11</artifactId>
-            <classifier>linux-aarch64</classifier>
+            <artifactId>pytorch-native-cpu</artifactId>
+            <classifier>win-x86_64</classifier>
             <scope>runtime</scope>
             <version>1.11.0</version>
         </dependency>
@@ -128,9 +136,30 @@
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.hxtt</groupId>
+            <artifactId>opencv-440</artifactId>
+            <version>3.2.029</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/opencv-440.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>BOOT-INF/classes/</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -165,18 +194,18 @@
                         <option>no-arg:annotation=com.example.annotations.NoArg</option>
                     </pluginOptions>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.jetbrains.kotlin</groupId>-->
+<!--                        <artifactId>kotlin-maven-allopen</artifactId>-->
+<!--                        <version>${kotlin.version}</version>-->
+<!--                    </dependency>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.jetbrains.kotlin</groupId>-->
+<!--                        <artifactId>kotlin-maven-noarg</artifactId>-->
+<!--                        <version>${kotlin.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

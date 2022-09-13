@@ -45,8 +45,7 @@ public class Table_seg {
         else if (angle < -45){
             angle = 90. + angle;
         }
-        if(Math.abs(angle)<1) //////
-            return image;
+        if(Math.abs(angle)<1) return image;
         Point center = new Point(h/2,w/2);
         Mat m = getRotationMatrix2D(center, angle, 1.0);
         Mat rotated_image = new Mat();
